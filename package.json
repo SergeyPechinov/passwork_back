@@ -1,0 +1,11 @@
+{
+  "name": "passwork_back",
+  "version": "1.0.0",
+  "description": "Api for react app with name 'Passwork'.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sergey Pechinov",
+  "license": "ISC"
+}
