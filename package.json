@@ -4,8 +4,22 @@
   "description": "Api for react app with name 'Passwork'.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "set NODE_ENV=dev && set NODE_APP_PORT=4000 && nodemon app.js",
+    "prod": "set NODE_ENV=prod && set NODE_APP_PORT=4000 && node app.js"
   },
   "author": "Sergey Pechinov",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SergeyPechinov/passwork_back"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^7.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
 }
