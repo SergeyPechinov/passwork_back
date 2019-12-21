@@ -7,7 +7,7 @@ const
 clientConnect = () => {
 	clientDB.connect(error => {
 		if (error) {
-			process.env.NODE_ENV === 'prod' ? logs('Ошибка подключения к бд (200)', true) : console.error('ОШИБКА ПОДКЛЮЧЕНИЯ К БД!');
+			process.env.NODE_ENV === 'prod' ? logs('Ошибка подключения к бд (200)', true) : console.error('Ошибка подключения к бд!');
 		} else {
 			if (process.env.NODE_ENV === 'prod') {
 				logs('Соеденение с бд установлено!');
