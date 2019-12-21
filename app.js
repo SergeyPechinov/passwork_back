@@ -1,14 +1,19 @@
 const
 		express = require('express'),
-		app = express();
+		app = express(),
+		{clientConnect} = require('./database/client'),
+		{logs} = require('./common/logs');
 
-console.log(process.env.NODE_ENV);
+//CONNECT DB
+clientConnect();
 
 //START SERVER
-const server = app.listen(process.env.NODE_APP_PORT, (error) => {
-	if (error)
-		return console.log(`Error ${error}`);
-	else {
-		console.log(`Server start in '${process.env.NODE_APP_PORT}' port!`);
+app.listen(process.env.NODE_APP_PORT, (error) => {
+	if (error) {
+		process.env.NODE_ENV === 'prod' ? logs('Ошибка запуска сервера (100)', true) : null;
+		return console.error(`Ошибка ${error}`);
+	} else {
+		console.log(`Сервер запущен на '${process.env.NODE_APP_PORT}' порту!`);
+		process.env.NODE_ENV === 'prod' ? logs(`Сервер запущен на ${process.env.NODE_APP_PORT} порту!`) : null;
 	}
 });
