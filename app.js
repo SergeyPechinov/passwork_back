@@ -7,7 +7,9 @@ const
 const createTableUsers = require('./database/tables/createTableUsers');
 createTableUsers();
 // const createTableStructureFolder = require('./database/tables/createTableStructureFolder.js');
-// createTableStructureFolder(12);
+// createTableStructureFolder(123);
+const createTablesUser = require('./database/tables/createTablesUser');
+createTablesUser(5, 'tags');
 
 //CONNECT DB
 clientConnect();

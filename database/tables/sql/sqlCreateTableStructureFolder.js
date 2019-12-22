@@ -3,8 +3,8 @@ const {tablesNames} = require('../../../constant/tablesNames');
 module.exports = {
 	query: id => {
 		return `CREATE TABLE IF NOT EXISTS ${tablesNames.userStructureFolder(id)} (\	
-						id_folder SERIAL,\
-						PRIMARY KEY(id_folder),\
+						id SERIAL,\
+						PRIMARY KEY(id),\
 						id_folder_parent int,\
 						list_users_available integer[]\
 					);`;
