@@ -1,7 +1,7 @@
 const
 		{tablesNames} = require('../../constant/tablesNames.js'),
 		{clientDB} = require('./../../database/client'),
-		{generateJWT} = require('./common'),
+		{generateJWT} = require('./jwt'),
 		{logs} = require('./../../common/logs');
 
 //создание токенов
@@ -58,7 +58,7 @@ module.exports = (req, res) => {
 
 	clientDB.query(query, (error, result) => {
 		if (error) {
-			process.env.NODE_ENV === 'prod' ? logs(`Ошибка авторизации (${email}) (400)`, true) : console.log(`Ошибка авторизации(${email}) (400)`);
+			process.env.NODE_ENV === 'prod' ? logs(`Ошибка подключения к бд (${email}) (2001)`, true) : console.log(`Ошибка подключения к бд (${email}) (2001)`);
 			res.status(400).json({success: false});
 		} else {
 			if (result.rows.length === 0) {

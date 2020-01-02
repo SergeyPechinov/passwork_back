@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {generateJWT, verifyJWT} = require('../functions/auth/common');
+const {generateJWT, verifyJWT} = require('../functions/auth/jwt');
 
 module.exports = (req, res, next) => {
 

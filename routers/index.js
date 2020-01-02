@@ -1,13 +1,15 @@
 const
 		express = require('express'),
 		router = express.Router(),
+		test = require('./test'),
 		passport = require('passport'),
-		protected = require('./protected'),
+		authentication = require('./../functions/auth/authentication'),
 
 		//ALL ROUTES
 		routesAuth = require('./auth');
 
-router.use('/auth', routesAuth);
-// router.use('/auth', protected, routesAuth);
+router
+		.use('/auth', routesAuth)
+		.use('/test', authentication, test);
 
 module.exports = router;

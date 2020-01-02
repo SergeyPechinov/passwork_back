@@ -12,13 +12,9 @@ const generateJWT = (email, time) => {
 };
 
 const verifyJWT = token => {
-	jwt.verify(token, jwtTokenAuth, (error, decoded) => {
-		console.log(token);
-		console.log(123);
-		console.log(error);
-		console.log(decoded);
+	return jwt.verify(token, jwtTokenAuth, (error, decoded) => {
 		if (error) {
-			return error.message;
+			return error.name;
 		} else {
 			return decoded;
 		}
