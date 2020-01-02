@@ -1,18 +1,23 @@
 const
 		express = require('express'),
 		app = express(),
+		bodyParser = require('body-parser'),
 		{clientConnect} = require('./database/client'),
 		{logs} = require('./common/logs');
 
-const createTableUsers = require('./database/tables/createTableUsers');
-createTableUsers();
-// const createTableStructureFolder = require('./database/tables/createTableStructureFolder.js');
-// createTableStructureFolder(123);
-const createTablesUser = require('./database/tables/createTablesUser');
-createTablesUser(5, 'tags');
-
 //CONNECT DB
 clientConnect();
+
+//CREATE TABLES
+const createTableUsers = require('./database/tables/createTableUsers');
+createTableUsers();
+
+//BODY PARSER
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+// ROUTERS
+app.use(require('./routers/index'));
 
 //START SERVER
 app.listen(process.env.NODE_APP_PORT, (error) => {
