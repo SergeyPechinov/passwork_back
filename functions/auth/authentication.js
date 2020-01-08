@@ -1,7 +1,7 @@
 const
 		{tablesNames} = require('../../constant/tablesNames.js'),
 		{clientDB} = require('./../../database/client'),
-		{verifyJWT} = require('./jwt'),
+		{verifyJWT} = require('../../common/jwt/jwt'),
 		{logs} = require('./../../common/logs');
 
 module.exports = (req, res, next) => {
@@ -33,7 +33,6 @@ module.exports = (req, res, next) => {
 					//если токен существует проверяем на валидность
 					if (typeof verifyTokenAccess === 'object') {
 						next();
-						// res.status(200).json({success: true});
 					} else {
 						const itemTokenRefresh = tokens[i].refresh;
 						const verifyTokenRefresh = verifyJWT(itemTokenRefresh);
@@ -41,7 +40,6 @@ module.exports = (req, res, next) => {
 						//если токен не валиден, проверверяем рефреш токен
 						if (typeof verifyTokenRefresh === 'object') {
 							next();
-							// res.status(200).json({success: true});
 						} else {
 							process.env.NODE_ENV === 'prod' ? logs(`Рефреш токен не валиден 'id: ${id}' (404)`, true) : console.log(`Рефреш токен не валиден'id: ${id}' (404)`);
 							res.status(401).json({success: false});

@@ -10,6 +10,6 @@ const
 
 router
 		.use('/auth', routesAuth)
-		.use('/test', authentication, test);
+		.use('/test', test);
 
 module.exports = router;

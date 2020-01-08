@@ -3,7 +3,11 @@ const
 		app = express(),
 		bodyParser = require('body-parser'),
 		{clientConnect} = require('./database/client'),
-		{logs} = require('./common/logs');
+		{logs} = require('./common/logs'),
+		cors = require('cors');
+
+//CORS
+app.use(cors());
 
 //CONNECT DB
 clientConnect();

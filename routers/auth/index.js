@@ -8,6 +8,6 @@ const
 router
 		.post('/', authorization)
 		.post('/auth', authentication)
-		.post('/reg', registration);
+		.post('/registration', registration);
 
 module.exports = router;
