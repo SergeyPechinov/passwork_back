@@ -20,7 +20,8 @@ const registration = (req, res) => {
 					INSERT INTO ${tablesNames.users}\
 						(email, name, password_master)\
 					VALUES
-			      ('${email}', '${name}', '${password}');`;
+			      ('${email}', '${name}', '${password}')\
+		      RETURNING id;`;
 
 	if (errors.email || errors.name || errors.password) {
 		res.status(400).json({
@@ -36,8 +37,15 @@ const registration = (req, res) => {
 	}
 };
 
+const createTablesUsers = id => {
+	const createTable = require('./../../database/tables/createTablesUser');
+	createTable(id, 'structureFolder');
+	createTable(id, 'passwords');
+	createTable(id, 'tags');
+};
+
 const registrationQuery = (query, email, res) => {
-	clientDB.query(query, error => {
+	clientDB.query(query, (error, result) => {
 		if (error) {
 			process.env.NODE_ENV === 'prod' ?
 					logs(`Ошибка регистрации (возомжно, что пользователь с таким email уже зарегистрирован) (${email}) (402) Error: ${error}`, true)
@@ -46,7 +54,13 @@ const registrationQuery = (query, email, res) => {
 			res.status(400).json({success: false, message: 'Пользователь с таким email уже зарегистрирован!'});
 		} else {
 			logs(`Пользователь '${email}' зарегистрирован`);
-			res.status(200).json({success: true});
+
+			try {
+				createTablesUsers(result.rows[0].id);
+				res.status(200).json({success: true});
+			} catch (error) {
+				res.status(400).json({success: false});
+			}
 		}
 	});
 };

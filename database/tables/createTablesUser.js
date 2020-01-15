@@ -5,6 +5,7 @@ const
 //какие могут быть входные данные
 //    structureFolder
 //    passwords
+//    tags
 
 module.exports = (id, nameTable) => {
 	let sqlQuery = null;
