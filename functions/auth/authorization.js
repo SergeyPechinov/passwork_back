@@ -30,7 +30,7 @@ const inputTokenInDataBase = (tokens, email, password) => {
           email='${email}'\
         AND\
           password_master='${password}'\
-        )`;
+        );`;
 
 	clientDB.query(query, error => {
 		if (error) {
@@ -61,7 +61,7 @@ const authorizationQuery = (res, email, password) => {
 				const jwtTokens = addTokenInTokens(tokenFull, result.rows[0].tokens);
 				inputTokenInDataBase(jwtTokens, email, password);
 				process.env.NODE_ENV === 'prod' ? logs(`Пользователь '${email}' авторизован`, true) : null;
-				res.status(200).json({success: true, tokenFull});
+				res.status(200).json({success: true, tokenFull, user_id: result.rows[0].id});
 			}
 		}
 	});

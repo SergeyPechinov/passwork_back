@@ -31,71 +31,78 @@ const updateToken = (email, tokens, tokenFull, res) => {
 
 module.exports = (req, res, next) => {
 	const
-			email = req.body.email,
+			id = req.body.id,
 			token = req.headers.authorization;
 
-	const query = `\
+	if (typeof id !== 'undefined' && id !== null) {
+		const query = `\
 				  SELECT\
 				    tokens, email\
 			    FROM\
 			      ${tablesNames.users}\
 		      WHERE\
-		        email='${email}'`;
+		        id='${id}'`;
 
-	clientDB.query(query, (error, result) => {
-		if (error) {
-			process.env.NODE_ENV === 'prod' ? logs(`Ошибка подключения к бд (2002)`, true) : console.log(`Ошибка подключения к бд (2002)`);
-		} else {
-			if (result.rows.length === 0) {
-				if (process.env.NODE_ENV === 'dev') {
-					console.log('Пользователь не найден!');
-				}
-				res.status(401).json({
-					success: false,
-				});
+		clientDB.query(query, (error, result) => {
+			if (error) {
+				process.env.NODE_ENV === 'prod' ? logs(`Ошибка подключения к бд (2002)`, true) : console.log(`Ошибка подключения к бд (2002)`);
 			} else {
-				const tokens = JSON.parse(result.rows[0].tokens);
-				const tokensLength = tokens.length;
+				if (result.rows.length === 0) {
+					if (process.env.NODE_ENV === 'dev') {
+						console.log('Пользователь не найден!');
+					}
+					res.status(401).json({
+						success: false,
+					});
+				} else {
+					const tokens = JSON.parse(result.rows[0].tokens);
+					const tokensLength = tokens.length;
 
-				//проверка существования токена
-				for (let i = 0; i < tokensLength; i++) {
-					const itemTokenAccess = tokens[i].access;
-					if (itemTokenAccess === token) {
-						const verifyTokenAccess = verifyJWT(itemTokenAccess);
+					//проверка существования токена
+					for (let i = 0; i < tokensLength; i++) {
+						const itemTokenAccess = tokens[i].access;
+						if (itemTokenAccess === token) {
+							const verifyTokenAccess = verifyJWT(itemTokenAccess);
 
-						//если токен существует проверяем на валидность
-						if (typeof verifyTokenAccess === 'object') {
-							next();
-						} else {
-							const itemTokenRefresh = tokens[i].refresh;
-							const verifyTokenRefresh = verifyJWT(itemTokenRefresh);
-
-							//если токен не валиден, проверверяем рефреш токен
-							if (typeof verifyTokenRefresh === 'object') {
-								const tokenFull = generateFull(result.rows[0].email);
-
-								tokens[i].access = tokenFull.access;
-								tokens[i].refresh = tokenFull.refresh;
-
-								updateToken(email, tokens, tokenFull, res);
+							//если токен существует проверяем на валидность
+							if (typeof verifyTokenAccess === 'object') {
+								next();
 							} else {
-								process.env.NODE_ENV === 'prod' ? logs(`Рефреш токен не валиден 'email: ${email}' (404)`, true) : console.log(`Рефреш токен не валиден'email: ${email}' (404)`);
-								res.status(401).json({
-									success: false,
-									verifyAccess: false,
-									verifyRefresh: false,
-								});
+								const itemTokenRefresh = tokens[i].refresh;
+								const verifyTokenRefresh = verifyJWT(itemTokenRefresh);
+
+								//если токен не валиден, проверверяем рефреш токен
+								if (typeof verifyTokenRefresh === 'object') {
+									const tokenFull = generateFull(result.rows[0].email);
+
+									tokens[i].access = tokenFull.access;
+									tokens[i].refresh = tokenFull.refresh;
+
+									updateToken(email, tokens, tokenFull, res);
+								} else {
+									process.env.NODE_ENV === 'prod' ? logs(`Рефреш токен не валиден 'email: ${email}' (404)`, true) : console.log(`Рефреш токен не валиден'email: ${email}' (404)`);
+									res.status(401).json({
+										success: false,
+										verifyAccess: false,
+										verifyRefresh: false,
+									});
+								}
 							}
-						}
-						break;
-					} else {
-						if (i === tokensLength - 1) {
-							process.env.NODE_ENV === 'prod' ? logs(`Токен в бд не существует 'email: ${email}' (403)`, true) : console.log(`Токен в бд не существует 'email: ${email}' (403)`);
-							res.status(401).json({success: false, message: 'Токен в бд не существует'});
+							break;
+						} else {
+							if (i === tokensLength - 1) {
+								process.env.NODE_ENV === 'prod' ? logs(`Токен в бд не существует 'email: ${email}' (403)`, true) : console.log(`Токен в бд не существует 'email: ${email}' (403)`);
+								res.status(401).json({success: false, message: 'Токен в бд не существует'});
+							}
 						}
 					}
 				}
 			}
-		}
-	});
+		});
+	} else {
+		//если не приходит токен
+		res.status(401).json({
+			success: false,
+		});
+	}
 };
