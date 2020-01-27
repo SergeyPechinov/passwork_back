@@ -5,14 +5,14 @@ const
 		{generateFull} = require('../../common/jwt/generateJWT'),
 		{logs} = require('./../../common/logs');
 
-const updateToken = (email, tokens, tokenFull, res) => {
+const updateToken = (id, tokens, tokenFull, res) => {
 	const query = `\
         UPDATE\
           ${tablesNames.users}\
         SET\
           tokens='${JSON.stringify(tokens)}'\
         WHERE (\
-          email='${email}'\
+          id='${id}'\
         )`;
 
 	clientDB.query(query, error => {
@@ -33,6 +33,8 @@ module.exports = (req, res, next) => {
 	const
 			id = req.body.id,
 			token = req.headers.authorization;
+
+	console.log(req.body)
 
 	if (typeof id !== 'undefined' && id !== null) {
 		const query = `\
@@ -78,9 +80,9 @@ module.exports = (req, res, next) => {
 									tokens[i].access = tokenFull.access;
 									tokens[i].refresh = tokenFull.refresh;
 
-									updateToken(email, tokens, tokenFull, res);
+									updateToken(id, tokens, tokenFull, res);
 								} else {
-									process.env.NODE_ENV === 'prod' ? logs(`Рефреш токен не валиден 'email: ${email}' (404)`, true) : console.log(`Рефреш токен не валиден'email: ${email}' (404)`);
+									process.env.NODE_ENV === 'prod' ? logs(`Рефреш токен не валиден 'id: ${id}' (404)`, true) : console.log(`Рефреш токен не валиден'id: ${id}' (404)`);
 									res.status(401).json({
 										success: false,
 										verifyAccess: false,
@@ -91,7 +93,7 @@ module.exports = (req, res, next) => {
 							break;
 						} else {
 							if (i === tokensLength - 1) {
-								process.env.NODE_ENV === 'prod' ? logs(`Токен в бд не существует 'email: ${email}' (403)`, true) : console.log(`Токен в бд не существует 'email: ${email}' (403)`);
+								process.env.NODE_ENV === 'prod' ? logs(`Токен в бд не существует 'id: ${id}' (403)`, true) : console.log(`Токен в бд не существует 'id: ${id}' (403)`);
 								res.status(401).json({success: false, message: 'Токен в бд не существует'});
 							}
 						}
