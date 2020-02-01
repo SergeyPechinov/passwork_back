@@ -6,10 +6,12 @@ const
 		authentication = require('./../functions/auth/authentication'),
 
 		//ALL ROUTES
-		routesAuth = require('./auth');
+		routesAuth = require('./auth'),
+		routesPassword = require('./password');
 
 router
 		.use('/auth', routesAuth)
+		.use('/password', authentication, routesPassword)
 		.use('/test', authentication, test);
 
 module.exports = router;

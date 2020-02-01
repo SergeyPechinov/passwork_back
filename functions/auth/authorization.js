@@ -72,9 +72,6 @@ module.exports = (req, res) => {
 			email = req.body.email,
 			password = req.body.password;
 
-	console.log(email, password);
-
-	console.log(validatorEmail(email));
 	const emailValidate = validatorEmail(email);
 
 	if (emailValidate && password.length >= 8) {

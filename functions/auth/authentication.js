@@ -34,8 +34,6 @@ module.exports = (req, res, next) => {
 			id = req.body.id,
 			token = req.headers.authorization;
 
-	console.log(req.body)
-
 	if (typeof id !== 'undefined' && id !== null) {
 		const query = `\
 				  SELECT\
@@ -48,6 +46,9 @@ module.exports = (req, res, next) => {
 		clientDB.query(query, (error, result) => {
 			if (error) {
 				process.env.NODE_ENV === 'prod' ? logs(`Ошибка подключения к бд (2002)`, true) : console.log(`Ошибка подключения к бд (2002)`);
+				res.status(400).json({
+					success: false,
+				})
 			} else {
 				if (result.rows.length === 0) {
 					if (process.env.NODE_ENV === 'dev') {
