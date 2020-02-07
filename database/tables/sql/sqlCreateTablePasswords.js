@@ -5,7 +5,7 @@ module.exports = {
 		return `CREATE TABLE IF NOT EXISTS ${tablesNames.userPasswords(id)} (\	
 						id SERIAL,\
 						PRIMARY KEY(id),\
-						id_site int,\
+						id_site character varying(100),\
 						id_folder int,\
 						name character varying(100),\
 						password text,\

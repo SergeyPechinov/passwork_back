@@ -48,6 +48,7 @@ module.exports = (req, res, next) => {
 				process.env.NODE_ENV === 'prod' ? logs(`Ошибка подключения к бд (2002)`, true) : console.log(`Ошибка подключения к бд (2002)`);
 				res.status(400).json({
 					success: false,
+					message: 'Ошибка подключения к бд!'
 				})
 			} else {
 				if (result.rows.length === 0) {
@@ -56,6 +57,7 @@ module.exports = (req, res, next) => {
 					}
 					res.status(401).json({
 						success: false,
+						message: 'Пользователь не найден'
 					});
 				} else {
 					const tokens = JSON.parse(result.rows[0].tokens);
@@ -106,6 +108,7 @@ module.exports = (req, res, next) => {
 		//если не приходит токен
 		res.status(401).json({
 			success: false,
+			message: 'Id не был передан в запросе'
 		});
 	}
 };

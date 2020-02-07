@@ -6,6 +6,7 @@ module.exports = {
 						id SERIAL,\
 						PRIMARY KEY(id),\
 						id_folder_parent int,\
+						name character varying(100),\
 						list_users_available integer[]\
 					);`;
 	},
